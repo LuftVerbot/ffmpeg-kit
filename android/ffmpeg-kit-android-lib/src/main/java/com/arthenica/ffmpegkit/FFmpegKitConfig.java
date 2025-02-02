@@ -19,6 +19,7 @@
 
 package com.arthenica.ffmpegkit;
 
+import android.annotation.SuppressLint;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -106,15 +107,15 @@ public class FFmpegKitConfig {
     /**
      * Generates ids for named ffmpeg kit pipes and saf protocol urls.
      */
-    private static final AtomicInteger uniqueIdGenerator;
+    private static AtomicInteger uniqueIdGenerator;
 
     private static Level activeLogLevel;
 
     /* Session history variables */
     private static int sessionHistorySize;
-    private static final Map<Long, Session> sessionHistoryMap;
-    private static final List<Session> sessionHistoryList;
-    private static final Object sessionHistoryLock;
+    private static Map<Long, Session> sessionHistoryMap;
+    private static List<Session> sessionHistoryList;
+    private static Object sessionHistoryLock;
 
     private static int asyncConcurrencyLimit;
     private static ExecutorService asyncExecutorService;
@@ -125,24 +126,26 @@ public class FFmpegKitConfig {
     private static FFmpegSessionCompleteCallback globalFFmpegSessionCompleteCallback;
     private static FFprobeSessionCompleteCallback globalFFprobeSessionCompleteCallback;
     private static MediaInformationSessionCompleteCallback globalMediaInformationSessionCompleteCallback;
-    private static final SparseArray<SAFProtocolUrl> safIdMap;
-    private static final SparseArray<SAFProtocolUrl> safFileDescriptorMap;
+    private static SparseArray<SAFProtocolUrl> safIdMap;
+    private static SparseArray<SAFProtocolUrl> safFileDescriptorMap;
     private static LogRedirectionStrategy globalLogRedirectionStrategy;
 
-    static {
+    public static boolean initialized;
 
-        Exceptions.registerRootPackage("com.arthenica");
+    public static void init(final File folder) {
+        if (initialized) return;
 
         android.util.Log.i(FFmpegKitConfig.TAG, "Loading ffmpeg-kit.");
 
-        final boolean nativeFFmpegTriedAndFailed = NativeLoader.loadFFmpeg();
+        AbiDetect.init(folder);
+        final boolean nativeFFmpegTriedAndFailed = NativeLoader.loadFFmpeg(folder);
 
         /* ALL FFMPEG-KIT LIBRARIES LOADED AT STARTUP */
         Abi.class.getName();
         FFmpegKit.class.getName();
         FFprobeKit.class.getName();
 
-        NativeLoader.loadFFmpegKit(nativeFFmpegTriedAndFailed);
+        NativeLoader.loadFFmpegKit(folder, nativeFFmpegTriedAndFailed);
 
         uniqueIdGenerator = new AtomicInteger(1);
 
@@ -173,6 +176,7 @@ public class FFmpegKitConfig {
         safFileDescriptorMap = new SparseArray<>();
         globalLogRedirectionStrategy = LogRedirectionStrategy.PRINT_LOGS_WHEN_NO_CALLBACKS_DEFINED;
 
+        initialized = true;
         android.util.Log.i(FFmpegKitConfig.TAG, String.format("Loaded ffmpeg-kit-%s-%s-%s-%s.", NativeLoader.loadPackageName(), NativeLoader.loadAbi(), NativeLoader.loadVersion(), NativeLoader.loadBuildDate()));
     }
 
@@ -622,7 +626,7 @@ public class FFmpegKitConfig {
                     remainingString = remainingString.substring(index);
                 }
             }
-        } while (remainingString.length() > 0);
+        } while (!remainingString.isEmpty());
     }
 
     /**
@@ -965,6 +969,7 @@ public class FFmpegKitConfig {
      * @param openMode file mode to use as defined in {@link ContentProvider#openFile ContentProvider.openFile}
      * @return input/output url that can be passed to FFmpegKit or FFprobeKit
      */
+    @SuppressLint("Range")
     public static String getSafParameter(final Context context, final Uri uri, final String openMode) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             android.util.Log.i(TAG, String.format("getSafParameter is not supported on API Level %d", Build.VERSION.SDK_INT));
