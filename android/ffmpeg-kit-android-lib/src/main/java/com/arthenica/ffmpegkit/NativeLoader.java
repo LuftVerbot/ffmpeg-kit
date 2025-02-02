@@ -37,25 +37,36 @@ import java.util.Locale;
  */
 public class NativeLoader {
 
-    public static final String[] FFMPEG_LIBRARIES = {"avutil", "swscale", "swresample", "avcodec", "avformat", "avfilter", "avdevice"};
+    static final String[] FFMPEG_LIBRARIES = {"avutil", "swscale", "swresample", "avcodec", "avformat", "avfilter", "avdevice"};
 
-    public static final String[] LIBRARIES_LINKED_WITH_CXX = {"chromaprint", "openh264", "rubberband", "snappy", "srt", "tesseract", "x265", "zimg", "libilbc"};
+    static final String[] LIBRARIES_LINKED_WITH_CXX = {"chromaprint", "openh264", "rubberband", "snappy", "srt", "tesseract", "x265", "zimg", "libilbc"};
 
     static boolean isTestModeDisabled() {
         return (System.getProperty("enable.ffmpeg.kit.test.mode") == null);
     }
 
-    @SuppressLint("UnsafeDynamicallyLoadedCode")
-    private static void loadLibrary(final File folder, final String libraryName) {
+    @SuppressLint({"UnsafeDynamicallyLoadedCode"})
+    private static void loadLibrary(String path, String libraryName) {
         if (isTestModeDisabled()) {
             try {
-                System.load(new File(folder, "lib" + libraryName + ".so").getAbsolutePath());
-            } catch (final UnsatisfiedLinkError e) {
+                String finalPath = String.format("%s/lib%s.so", path, libraryName);
+                System.out.println(finalPath);
+                System.load(finalPath);
+            } catch (UnsatisfiedLinkError var3) {
+                UnsatisfiedLinkError e = var3;
                 throw new Error(String.format("FFmpegKit failed to start on %s.", getDeviceDebugInformation()), e);
             }
         }
+
     }
 
+    private static List<String> loadExternalLibraries() {
+        if(isTestModeDisabled()) {
+            return Packages.getExternalLibraries();
+        } else {
+            return Collections.emptyList();
+        }
+    }
 
     private static String loadNativeAbi() {
         if (isTestModeDisabled()) {
@@ -123,43 +134,48 @@ public class NativeLoader {
         }
     }
 
-    static void loadFFmpegKitAbiDetect(final File folder) {
-        loadLibrary(folder, "ffmpegkit_abidetect");
+    static void loadFFmpegKitAbiDetect(final String path) {
+        loadLibrary(path, "ffmpegkit_abidetect");
     }
 
-    @SuppressLint("UnsafeDynamicallyLoadedCode")
-    static boolean loadFFmpeg(final File folder) {
+    static boolean loadFFmpeg() {
         boolean nativeFFmpegLoaded = false;
         boolean nativeFFmpegTriedAndFailed = false;
 
-        try {
-            System.load(new File(folder, "libc++_shared.so").getAbsolutePath());
-        } catch (final Error e) {
-            android.util.Log.i(FFmpegKitConfig.TAG, String.format("c++_shared library not found.%s", Exceptions.getStackTraceString(e)));
-        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 
-        if (AbiDetect.ARM_V7A.equals(loadNativeAbi())) {
-            try {
-                for (String ffmpegLibrary : FFMPEG_LIBRARIES) {
-                    loadLibrary(folder, ffmpegLibrary + "_neon");
+            /* LOADING LINKED LIBRARIES MANUALLY ON API < 21 */
+            final List<String> externalLibrariesEnabled = loadExternalLibraries();
+            for (String dependantLibrary : LIBRARIES_LINKED_WITH_CXX) {
+                if (externalLibrariesEnabled.contains(dependantLibrary)) {
+                    loadLibrary(path, "c++_shared");
+                    break;
                 }
-                nativeFFmpegLoaded = true;
-            } catch (final Error e) {
-                android.util.Log.i(FFmpegKitConfig.TAG, String.format("NEON supported armeabi-v7a ffmpeg library not found. Loading default armeabi-v7a library.%s", Exceptions.getStackTraceString(e)));
-                nativeFFmpegTriedAndFailed = true;
             }
-        }
 
-        if (!nativeFFmpegLoaded) {
-            for (String ffmpegLibrary : FFMPEG_LIBRARIES) {
-                loadLibrary(folder, ffmpegLibrary);
+            if (AbiDetect.ARM_V7A.equals(loadNativeAbi())) {
+                try {
+                    for (String ffmpegLibrary : FFMPEG_LIBRARIES) {
+                        loadLibrary(path, ffmpegLibrary + "_neon");
+                    }
+                    nativeFFmpegLoaded = true;
+                } catch (final Error e) {
+                    android.util.Log.i(FFmpegKitConfig.TAG, String.format("NEON supported armeabi-v7a ffmpeg library not found. Loading default armeabi-v7a library.%s", Exceptions.getStackTraceString(e)));
+                    nativeFFmpegTriedAndFailed = true;
+                }
+            }
+
+            if (!nativeFFmpegLoaded) {
+                for (String ffmpegLibrary : FFMPEG_LIBRARIES) {
+                    loadLibrary(path, ffmpegLibrary);
+                }
             }
         }
 
         return nativeFFmpegTriedAndFailed;
     }
 
-    static void loadFFmpegKit(final File folder, final boolean nativeFFmpegTriedAndFailed) {
+    static void loadFFmpegKit(final boolean nativeFFmpegTriedAndFailed, final String path) {
         boolean nativeFFmpegKitLoaded = false;
 
         if (!nativeFFmpegTriedAndFailed && AbiDetect.ARM_V7A.equals(loadNativeAbi())) {
@@ -169,7 +185,7 @@ public class NativeLoader {
                  * THE TRY TO LOAD ARM-V7A-NEON FIRST. IF NOT LOAD DEFAULT ARM-V7A
                  */
 
-                loadLibrary(folder, "ffmpegkit_armv7a_neon");
+                loadLibrary("ffmpegkit_armv7a_neon");
                 nativeFFmpegKitLoaded = true;
                 AbiDetect.setArmV7aNeonLoaded();
             } catch (final Error e) {
@@ -178,10 +194,11 @@ public class NativeLoader {
         }
 
         if (!nativeFFmpegKitLoaded) {
-            loadLibrary(folder, "ffmpegkit");
+            loadLibrary("ffmpegkit");
         }
     }
 
+    @SuppressWarnings("deprecation")
     static String getDeviceDebugInformation() {
         final StringBuilder stringBuilder = new StringBuilder();
 
@@ -193,12 +210,20 @@ public class NativeLoader {
         stringBuilder.append(Build.DEVICE);
         stringBuilder.append(", api level: ");
         stringBuilder.append(Build.VERSION.SDK_INT);
-        stringBuilder.append(", abis: ");
-        stringBuilder.append(FFmpegKitConfig.argumentsToString(Build.SUPPORTED_ABIS));
-        stringBuilder.append(", 32bit abis: ");
-        stringBuilder.append(FFmpegKitConfig.argumentsToString(Build.SUPPORTED_32_BIT_ABIS));
-        stringBuilder.append(", 64bit abis: ");
-        stringBuilder.append(FFmpegKitConfig.argumentsToString(Build.SUPPORTED_64_BIT_ABIS));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            stringBuilder.append(", abis: ");
+            stringBuilder.append(FFmpegKitConfig.argumentsToString(Build.SUPPORTED_ABIS));
+            stringBuilder.append(", 32bit abis: ");
+            stringBuilder.append(FFmpegKitConfig.argumentsToString(Build.SUPPORTED_32_BIT_ABIS));
+            stringBuilder.append(", 64bit abis: ");
+            stringBuilder.append(FFmpegKitConfig.argumentsToString(Build.SUPPORTED_64_BIT_ABIS));
+        } else {
+            stringBuilder.append(", cpu abis: ");
+            stringBuilder.append(Build.CPU_ABI);
+            stringBuilder.append(", cpu abi2s: ");
+            stringBuilder.append(Build.CPU_ABI2);
+        }
 
         return stringBuilder.toString();
     }
