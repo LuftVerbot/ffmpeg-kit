@@ -138,7 +138,7 @@ public class NativeLoader {
         loadLibrary(path, "ffmpegkit_abidetect");
     }
 
-    static boolean loadFFmpeg() {
+    static boolean loadFFmpeg(final String path) {
         boolean nativeFFmpegLoaded = false;
         boolean nativeFFmpegTriedAndFailed = false;
 
