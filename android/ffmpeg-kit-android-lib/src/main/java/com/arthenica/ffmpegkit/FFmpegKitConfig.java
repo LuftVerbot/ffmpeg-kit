@@ -132,20 +132,18 @@ public class FFmpegKitConfig {
 
     public static boolean initialized;
 
-    public static void init(final File folder) {
-        if (initialized) return;
+    public static void init(final String path) {
 
         android.util.Log.i(FFmpegKitConfig.TAG, "Loading ffmpeg-kit.");
 
-        AbiDetect.init(folder);
-        final boolean nativeFFmpegTriedAndFailed = NativeLoader.loadFFmpeg(folder);
+        final boolean nativeFFmpegTriedAndFailed = NativeLoader.loadFFmpeg(path);
 
         /* ALL FFMPEG-KIT LIBRARIES LOADED AT STARTUP */
         Abi.class.getName();
         FFmpegKit.class.getName();
         FFprobeKit.class.getName();
 
-        NativeLoader.loadFFmpegKit(folder, nativeFFmpegTriedAndFailed);
+        NativeLoader.loadFFmpegKit(nativeFFmpegTriedAndFailed, path);
 
         uniqueIdGenerator = new AtomicInteger(1);
 
@@ -176,7 +174,6 @@ public class FFmpegKitConfig {
         safFileDescriptorMap = new SparseArray<>();
         globalLogRedirectionStrategy = LogRedirectionStrategy.PRINT_LOGS_WHEN_NO_CALLBACKS_DEFINED;
 
-        initialized = true;
         android.util.Log.i(FFmpegKitConfig.TAG, String.format("Loaded ffmpeg-kit-%s-%s-%s-%s.", NativeLoader.loadPackageName(), NativeLoader.loadAbi(), NativeLoader.loadVersion(), NativeLoader.loadBuildDate()));
     }
 
@@ -969,7 +966,6 @@ public class FFmpegKitConfig {
      * @param openMode file mode to use as defined in {@link ContentProvider#openFile ContentProvider.openFile}
      * @return input/output url that can be passed to FFmpegKit or FFprobeKit
      */
-    @SuppressLint("Range")
     public static String getSafParameter(final Context context, final Uri uri, final String openMode) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             android.util.Log.i(TAG, String.format("getSafParameter is not supported on API Level %d", Build.VERSION.SDK_INT));
