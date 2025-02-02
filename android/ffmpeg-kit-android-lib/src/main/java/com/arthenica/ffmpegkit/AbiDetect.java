@@ -27,7 +27,7 @@ public class AbiDetect {
     public static void init(final String path) {
         armV7aNeonLoaded = false;
 
-        NativeLoader.loadFFmpegKitAbiDetect(folder);
+        NativeLoader.loadFFmpegKitAbiDetect(path);
 
         /* ALL LIBRARIES LOADED AT STARTUP */
         FFmpegKit.class.getName();
