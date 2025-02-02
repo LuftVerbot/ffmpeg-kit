@@ -19,14 +19,12 @@
 
 package com.arthenica.ffmpegkit;
 
-import java.io.File;
-
 /**
  * <p>Detects the running ABI name natively using Google <code>cpu-features</code> library.
  */
 public class AbiDetect {
 
-    static void init(final File folder) {
+    public static void init(final String path) {
         armV7aNeonLoaded = false;
 
         NativeLoader.loadFFmpegKitAbiDetect(folder);
