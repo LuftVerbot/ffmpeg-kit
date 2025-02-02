@@ -185,7 +185,7 @@ public class NativeLoader {
                  * THE TRY TO LOAD ARM-V7A-NEON FIRST. IF NOT LOAD DEFAULT ARM-V7A
                  */
 
-                loadLibrary("ffmpegkit_armv7a_neon");
+                loadLibrary(path, "ffmpegkit_armv7a_neon");
                 nativeFFmpegKitLoaded = true;
                 AbiDetect.setArmV7aNeonLoaded();
             } catch (final Error e) {
@@ -194,7 +194,7 @@ public class NativeLoader {
         }
 
         if (!nativeFFmpegKitLoaded) {
-            loadLibrary("ffmpegkit");
+            loadLibrary(path, "ffmpegkit");
         }
     }
 
