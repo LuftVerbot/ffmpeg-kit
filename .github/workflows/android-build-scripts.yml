@@ -1,6 +1,7 @@
 name: android build scripts
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - development
@@ -30,7 +31,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        ndk-version: ['r25b-linux']
+        ndk-version: ['r23b-linux']
     defaults:
       run:
         shell: bash
@@ -51,7 +52,7 @@ jobs:
       - name: install packages
         run: sudo apt-get install -y autoconf automake libtool pkg-config curl git doxygen nasm cmake gcc gperf texinfo yasm bison autogen wget autopoint meson ninja-build ragel groff gtk-doc-tools libtasn1-bin
       - name: run the build script
-        run: ./android.sh -d --enable-android-media-codec --enable-android-zlib --enable-gmp --enable-gnutls
+        run: ./android.sh -d --lts --enable-android-media-codec --enable-android-zlib --enable-gmp --enable-gnutls
       - name: print build logs
         if: ${{ always() }}
         run: cat build.log
