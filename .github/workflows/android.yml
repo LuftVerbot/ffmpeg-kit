@@ -7,13 +7,13 @@ on:
       NDK_VERSION:
         description: Android NDK
         required: true
-        default: r25
+        default: r28
 
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      NDK_VERSION: ${{ github.event.inputs.NDK_VERSION || 'r27c' }}
+      NDK_VERSION: ${{ github.event.inputs.NDK_VERSION || 'r23b' }}
     steps:
       - uses: actions/checkout@v4
 
