@@ -7,7 +7,7 @@ on:
       NDK_VERSION:
         description: Android NDK
         required: true
-        default: r28
+        default: r25
 
 jobs:
   build:

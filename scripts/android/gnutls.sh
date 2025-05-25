@@ -23,11 +23,6 @@ export HOGWEED_LIBS="-L${LIB_INSTALL_BASE}/nettle/lib -lhogweed -L${LIB_INSTALL_
 export GMP_CFLAGS="-I${LIB_INSTALL_BASE}/gmp/include"
 export GMP_LIBS="-L${LIB_INSTALL_BASE}/gmp/lib -lgmp"
 
-export ac_cv_func_mktime_z=no
-export ac_cv_func_tzalloc=no
-export ac_cv_func_localtime_rz=no
-export ac_cv_func_tzfree=no
-
 # SET BUILD OPTIONS
 ASM_OPTIONS=""
 case ${ARCH} in
@@ -48,27 +43,6 @@ if [[ ! -f "${BASEDIR}"/src/"${LIB_NAME}"/configure ]] || [[ ${RECONF_gnutls} -e
   git submodule update --remote gnulib || return 1
   overwrite_file ./gnulib/lib/fpending.c ./src/gl/fpending.c || return 1
 fi
-
-apply_patch <<'EOF'
-*** Begin Patch
-*** Update File: src/gnutls/src/gl/nstrftime.c
-@@ -1192,7 +1192,7 @@ nstrftime (…)
--            t = mktime_z (tz, &ltm);
-+            t = mktime (&ltm);
-*** End Patch
-EOF
-
-apply_patch <<'EOF'
-*** Begin Patch
-*** Update File: src/gnutls/src/gl/parse-datetime.y
-@@ -1775,7 +1775,7 @@ parse_datetime (…)
--            tz1 = tzalloc (tz1string);
-+            tz1 = NULL;
-@@ -1790,7 +1790,7 @@ parse_datetime (…)
--  if (! localtime_rz (tz, &now->tv_sec, &tmp))
-+  if (! localtime_r (&now->tv_sec, &tmp))
-*** End Patch
-EOF
 
 ./configure \
   --prefix="${LIB_INSTALL_PREFIX}" \
