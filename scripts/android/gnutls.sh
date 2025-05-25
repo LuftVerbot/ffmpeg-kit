@@ -23,6 +23,11 @@ export HOGWEED_LIBS="-L${LIB_INSTALL_BASE}/nettle/lib -lhogweed -L${LIB_INSTALL_
 export GMP_CFLAGS="-I${LIB_INSTALL_BASE}/gmp/include"
 export GMP_LIBS="-L${LIB_INSTALL_BASE}/gmp/lib -lgmp"
 
+export ac_cv_func_mktime_z=no
+export ac_cv_func_tzalloc=no
+export ac_cv_func_localtime_rz=no
+export ac_cv_func_tzfree=no
+
 # SET BUILD OPTIONS
 ASM_OPTIONS=""
 case ${ARCH} in
