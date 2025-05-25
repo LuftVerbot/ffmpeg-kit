@@ -49,6 +49,27 @@ if [[ ! -f "${BASEDIR}"/src/"${LIB_NAME}"/configure ]] || [[ ${RECONF_gnutls} -e
   overwrite_file ./gnulib/lib/fpending.c ./src/gl/fpending.c || return 1
 fi
 
+apply_patch <<'EOF'
+*** Begin Patch
+*** Update File: src/gnutls/src/gl/nstrftime.c
+@@ -1192,7 +1192,7 @@ nstrftime (…)
+-            t = mktime_z (tz, &ltm);
++            t = mktime (&ltm);
+*** End Patch
+EOF
+
+apply_patch <<'EOF'
+*** Begin Patch
+*** Update File: src/gnutls/src/gl/parse-datetime.y
+@@ -1775,7 +1775,7 @@ parse_datetime (…)
+-            tz1 = tzalloc (tz1string);
++            tz1 = NULL;
+@@ -1790,7 +1790,7 @@ parse_datetime (…)
+-  if (! localtime_rz (tz, &now->tv_sec, &tmp))
++  if (! localtime_r (&now->tv_sec, &tmp))
+*** End Patch
+EOF
+
 ./configure \
   --prefix="${LIB_INSTALL_PREFIX}" \
   --with-pic \
