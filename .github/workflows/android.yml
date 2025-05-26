@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      NDK_VERSION: ${{ github.event.inputs.NDK_VERSION || 'r25b' }}
+      NDK_VERSION: ${{ github.event.inputs.NDK_VERSION || 'r23b' }}
     steps:
       - uses: actions/checkout@v4
 
