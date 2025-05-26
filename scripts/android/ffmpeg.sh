@@ -447,8 +447,7 @@ fi
   --enable-encoder=flac,mjpeg \
   --enable-demuxer=flac,mov,mp4,image2,hls,mpegts \
   --enable-parser=flac,mjpeg,aac \
-  --enable-muxer=flac,mov,mp4 \
-  --enable-bsf=aac_adtstoasc \
+  --enable-muxer=flac,mov,mp4,mpegts \
   --enable-protocol=file,http,https,tls,tcp \
   ${CONFIGURE_POSTFIX} 1>>"${BASEDIR}"/build.log 2>&1
 
