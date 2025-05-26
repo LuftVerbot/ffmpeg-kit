@@ -42,6 +42,7 @@ jobs:
             --enable-android-media-codec \
             --enable-android-zlib \
             --enable-gmp \
+            --enable-gnutls \
             --disable-arm-v7a
       - name: Upload Build Logs
         if: failure()

@@ -314,6 +314,8 @@ for library in {0..61}; do
       CONFIGURE_POSTFIX+=" --disable-zlib"
     elif [[ ${library} -eq ${LIBRARY_ANDROID_MEDIA_CODEC} ]]; then
       CONFIGURE_POSTFIX+=" --disable-mediacodec"
+    elif [[ ${library} -eq ${LIBRARY_OPENSSL} ]]; then
+      CONFIGURE_POSTFIX+=" --disable-openssl"
     fi
   fi
 done
