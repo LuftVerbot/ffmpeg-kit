@@ -35,7 +35,7 @@ jobs:
           unzip -q ndk.zip
           echo "ANDROID_NDK_ROOT=$PWD/android-ndk-${{ env.NDK_VERSION }}" >> $GITHUB_ENV
       - name: install packages
-        run: sudo apt-get install -y autoconf automake libtool pkg-config curl git doxygen nasm cmake gcc gperf texinfo yasm bison autogen wget autopoint meson ninja-build ragel groff gtk-doc-tools libtasn1-bin openssl
+        run: sudo apt-get install -y autoconf automake libtool pkg-config curl git doxygen nasm cmake gcc gperf texinfo yasm bison autogen wget autopoint meson ninja-build ragel groff gtk-doc-tools libtasn1-bin pkg-config libssl-dev openssl
       - name: Build FFmpeg
         run: |
           ./android.sh -d \
