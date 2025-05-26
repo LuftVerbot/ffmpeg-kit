@@ -442,11 +442,11 @@ fi
   --enable-pthreads \
   --enable-small \
   --enable-network \
-  --enable-decoder=flac,m4a,mp4 \
-  --enable-encoder=flac,m4a,mp4 \
-  --enable-demuxer=flac,mov,mpegts,mp4,m4a \
-  --enable-parser=flac,m4a,mp4 \
-  --enable-muxer=flac,mp4,mpegts,m4a \
+  --enable-decoder=flac,mjpeg \
+  --enable-encoder=flac,mjpeg \
+  --enable-demuxer=flac,mov,image2 \
+  --enable-parser=flac,mjpeg \
+  --enable-muxer=flac,mov \
   --enable-protocol=file,http,tls \
   ${CONFIGURE_POSTFIX} 1>>"${BASEDIR}"/build.log 2>&1
 
