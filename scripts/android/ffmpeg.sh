@@ -443,9 +443,9 @@ fi
   --enable-small \
   --enable-network \
   --enable-openssl \
-  --enable-decoder=flac,mjpeg \
+  --enable-decoder=flac,mjpeg,aac \
   --enable-encoder=flac,mjpeg \
-  --enable-demuxer=flac,mov,mp4,image2,hls,mpegts \
+  --enable-demuxer=flac,mov,mp4,image2,hls,mpegts,aac \
   --enable-parser=flac,mjpeg,aac \
   --enable-muxer=flac,mov,mp4,mpegts \
   --enable-protocol=file,http,https,tls,tcp \
