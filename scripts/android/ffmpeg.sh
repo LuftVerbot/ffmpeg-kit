@@ -442,12 +442,14 @@ fi
   --enable-pthreads \
   --enable-small \
   --enable-network \
+  --enable-openssl \
   --enable-decoder=flac,mjpeg \
   --enable-encoder=flac,mjpeg \
-  --enable-demuxer=flac,mov,mp4,image2 \
-  --enable-parser=flac,mjpeg \
+  --enable-demuxer=flac,mov,mp4,image2,hls \
+  --enable-parser=flac,mjpeg,acc \
   --enable-muxer=flac,mov,mp4 \
-  --enable-protocol=file,http,tls \
+  --enable-bsf=aac_adtstoasc \
+  --enable-protocol=file,http,https,tls,tcp \
   ${CONFIGURE_POSTFIX} 1>>"${BASEDIR}"/build.log 2>&1
 
 if [[ $? -ne 0 ]]; then
