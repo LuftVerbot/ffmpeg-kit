@@ -314,6 +314,8 @@ for library in {0..61}; do
       CONFIGURE_POSTFIX+=" --disable-zlib"
     elif [[ ${library} -eq ${LIBRARY_ANDROID_MEDIA_CODEC} ]]; then
       CONFIGURE_POSTFIX+=" --disable-mediacodec"
+    elif [[ ${library} -eq ${LIBRARY_OPENSSL} ]]; then
+      CONFIGURE_POSTFIX+=" --disable-openssl"
     fi
   fi
 done
@@ -440,12 +442,11 @@ fi
   --enable-pthreads \
   --enable-small \
   --enable-network \
-  --enable-openssl \
   --enable-decoder=flac,mjpeg,aac \
   --enable-encoder=flac,mjpeg \
-  --enable-demuxer=flac,mov,mp4,image2,hls,mpegts,aac \
+  --enable-demuxer=flac,mov,mp4,image2,hls,mpegts,aac,matroska,webm_dash_manifest \
   --enable-parser=flac,mjpeg,aac \
-  --enable-muxer=flac,mov,mp4,mpegts \
+  --enable-muxer=flac,mov,mp4,mpegts,ipod \
   --enable-protocol=file,http,https,tls,tcp \
   ${CONFIGURE_POSTFIX} 1>>"${BASEDIR}"/build.log 2>&1
 
