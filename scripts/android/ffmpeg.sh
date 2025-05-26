@@ -437,6 +437,7 @@ fi
   --enable-cross-compile \
   --enable-pic \
   --enable-jni \
+  --enable-libjpeg \
   --enable-optimizations \
   ${BUILD_LIBRARY_OPTIONS} \
   --enable-pthreads \
