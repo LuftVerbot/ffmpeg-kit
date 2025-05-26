@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      NDK_VERSION: ${{ github.event.inputs.NDK_VERSION || 'r23b' }}
+      NDK_VERSION: ${{ github.event.inputs.NDK_VERSION || 'r25b' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -25,6 +25,9 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+
+      - name: prerequisites
+        run: ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --uninstall "cmake;3.10.2.4988404" "cmake;3.18.1"
 
       - name: Download NDK
         run: |
