@@ -445,8 +445,8 @@ fi
   --enable-openssl \
   --enable-decoder=flac,mjpeg \
   --enable-encoder=flac,mjpeg \
-  --enable-demuxer=flac,mov,mp4,image2,hls \
-  --enable-parser=flac,mjpeg,acc \
+  --enable-demuxer=flac,mov,mp4,image2,hls,mpegts \
+  --enable-parser=flac,mjpeg,aac \
   --enable-muxer=flac,mov,mp4 \
   --enable-bsf=aac_adtstoasc \
   --enable-protocol=file,http,https,tls,tcp \
