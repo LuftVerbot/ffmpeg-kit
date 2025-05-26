@@ -441,12 +441,13 @@ fi
   ${BUILD_LIBRARY_OPTIONS} \
   --enable-pthreads \
   --enable-small \
-  --enable-decoder=flac \
-  --enable-encoder=flac \
-  --enable-demuxer=flac,mov,mpegts,mp4 \
-  --enable-parser=flac \
-  --enable-muxer=flac,mp4,mpegts \
-  --enable-protocol=file \
+  --enable-network \
+  --enable-decoder=flac,m4a,mp4 \
+  --enable-encoder=flac,m4a,mp4 \
+  --enable-demuxer=flac,mov,mpegts,mp4,m4a \
+  --enable-parser=flac,m4a,mp4 \
+  --enable-muxer=flac,mp4,mpegts,m4a \
+  --enable-protocol=file,http,tls \
   ${CONFIGURE_POSTFIX} 1>>"${BASEDIR}"/build.log 2>&1
 
 if [[ $? -ne 0 ]]; then
