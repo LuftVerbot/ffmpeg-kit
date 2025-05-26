@@ -444,9 +444,9 @@ fi
   --enable-network \
   --enable-decoder=flac,mjpeg \
   --enable-encoder=flac,mjpeg \
-  --enable-demuxer=flac,mov,image2 \
+  --enable-demuxer=flac,mov,mp4,image2 \
   --enable-parser=flac,mjpeg \
-  --enable-muxer=flac,mov \
+  --enable-muxer=flac,mov,mp4 \
   --enable-protocol=file,http,tls \
   ${CONFIGURE_POSTFIX} 1>>"${BASEDIR}"/build.log 2>&1
 
