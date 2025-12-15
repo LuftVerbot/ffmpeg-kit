@@ -447,6 +447,7 @@ fi
   --enable-demuxer=flac,mov,mp4,image2,hls,mpegts,aac,matroska,webm_dash_manifest \
   --enable-parser=flac,mjpeg,aac \
   --enable-muxer=flac,mov,mp4,mpegts,ipod \
+  --enable-bsf=aac_adtstoasc \
   --enable-protocol=file,http,https,tls,tcp \
   ${CONFIGURE_POSTFIX} 1>>"${BASEDIR}"/build.log 2>&1
 
