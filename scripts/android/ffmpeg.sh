@@ -442,12 +442,11 @@ fi
   --enable-pthreads \
   --enable-small \
   --enable-network \
-  --enable-decoder=flac,mjpeg,aac \
-  --enable-encoder=flac,mjpeg \
-  --enable-demuxer=flac,mov,mp4,image2,hls,mpegts,aac,matroska,webm_dash_manifest \
-  --enable-parser=flac,mjpeg,aac \
-  --enable-muxer=flac,mov,mp4,mpegts,ipod \
-  --enable-bsf=aac_adtstoasc \
+  --enable-decoder=flac,mjpeg,aac,vp9,vorbis,opus \
+  --enable-encoder=flac,vorbis,aac \
+  --enable-demuxer=flac,mov,mp4,image2,hls,mp3,ogg,matroska \
+  --enable-parser=flac,aac,vp9,mpegaudio,vorbis \
+  --enable-muxer=flac,mov,mp4,ipod,hls,mp3,ogg \
   --enable-protocol=file,http,https,tls,tcp \
   ${CONFIGURE_POSTFIX} 1>>"${BASEDIR}"/build.log 2>&1
 
