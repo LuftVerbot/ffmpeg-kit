@@ -389,8 +389,8 @@ export CFLAGS="${HIGH_PRIORITY_INCLUDES} ${CFLAGS}"
 ulimit -n 2048 1>>"${BASEDIR}"/build.log 2>&1
 
 ########################### CUSTOMIZATIONS #######################
-cd "${BASEDIR}" 1>>"${BASEDIR}"/build.log 2>&1 || return 1
-git checkout android/ffmpeg-kit-android-lib/src/main/cpp/ffmpegkit.c 1>>"${BASEDIR}"/build.log 2>&1
+#cd "${BASEDIR}" 1>>"${BASEDIR}"/build.log 2>&1 || return 1
+#git checkout android/ffmpeg-kit-android-lib/src/main/cpp/ffmpegkit.c 1>>"${BASEDIR}"/build.log 2>&1
 cd "${BASEDIR}"/src/"${LIB_NAME}" 1>>"${BASEDIR}"/build.log 2>&1 || return 1
 git checkout libavformat/file.c 1>>"${BASEDIR}"/build.log 2>&1
 git checkout libavformat/protocols.c 1>>"${BASEDIR}"/build.log 2>&1
@@ -447,7 +447,7 @@ fi
   --enable-demuxer=flac,mov,mp4,image2,hls,mp3,ogg,matroska \
   --enable-parser=flac,aac,vp9,mpegaudio,vorbis \
   --enable-muxer=flac,mov,mp4,ipod,hls,mp3,ogg \
-  --enable-protocol=file,http,https,tls,tcp \
+  --enable-protocol=file,http,https,tls,tcp,udp \
   ${CONFIGURE_POSTFIX} 1>>"${BASEDIR}"/build.log 2>&1
 
 if [[ $? -ne 0 ]]; then

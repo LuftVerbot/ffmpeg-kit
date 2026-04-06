@@ -27,7 +27,14 @@
 #include "libavutil/ffversion.h"
 
 /** Library version string */
-#define FFMPEG_KIT_VERSION "6.0"
+#define FFMPEG_KIT_VERSION "8.1"
+
+/**
+ * Custom log level for ffprobe output that must always be captured,
+ * regardless of the configured log level. FFmpeg removed AV_LOG_STDERR
+ * in 8.x; this replaces it for ffmpeg-kit's output redirection.
+ */
+#define AV_LOG_STDERR -16
 
 /** Defines tag used for Android logging. */
 #define LIB_NAME "ffmpeg-kit"

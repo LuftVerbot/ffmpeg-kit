@@ -453,8 +453,8 @@ void ffmpegkit_log_callback_function(void *ptr, int level, const char* format, v
     }
     int activeLogLevel = av_log_get_level();
 
-    // AV_LOG_STDERR logs are always redirected
-    if ((activeLogLevel == AV_LOG_QUIET && level != AV_LOG_STDERR) || (level > activeLogLevel)) {
+    // AV_LOG_STDERR logs are always redirected (used for ffprobe output)
+    if ((activeLogLevel == AV_LOG_QUIET && level != AV_LOG_STDERR) || (level != AV_LOG_STDERR && level > activeLogLevel)) {
         return;
     }
 
